@@ -1,0 +1,20 @@
+<html>
+		<head>
+				<title>trimlib</title>
+				<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
+		</head>
+		<body>
+				
+				<h1>Content1:</h1>
+				<div id="content1"></div>
+				
+				<script type="text/javascript" src="http://trimpath.googlecode.com/files/trimpath-template-1.0.38.js"></script>
+				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+				<script type="text/javascript" src="jquery.trimlib.js"></script>
+				<script type="text/javascript">
+						(function($) {
+								$('#content1').trimlib({namespace: 'test', template: 'hello', data: {world: 'World'}}).hide().slideDown('slow');
+						})(jQuery);
+				</script>
+		</body>
+</html>

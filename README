@@ -1,3 +1,0 @@
-A simple jQuery plugin wrapper for TrimPath that provides the ability to externalize your TrimPath
-templates. A document of TrimPath templates may be "namespaced" on the DOM and referenced using an
-HTML <link /> tag with a few custom parameters. See test.html and tld.html as an example.

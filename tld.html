@@ -1,5 +1,17 @@
 <textarea id="hello">
-		<p>
-				Hello, ${world}!
-		</p>
+	<p>
+		Hello, ${world}!
+	</p>
+</textarea>
+
+<textarea id="section">
+	{if !defined('rendered')}
+		{var rendered = true}
+	{/if}
+	{if rendered === true}
+		<h1>${title}</h1>
+		<div>
+			${__body}
+		</div>
+	{/if}
 </textarea>

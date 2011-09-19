@@ -2,18 +2,56 @@
 		<head>
 				<title>trimlib</title>
 				<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
+				
 		</head>
 		<body>
 				
 				<h1>Content1:</h1>
 				<div id="content1"></div>
 				
+				<h1>Content2:</h1>
+				<div id="content2"></div>
+				
+				<h1>Content3:</h1>
+				<div id="content3">
+					<p>This is the content in the attribute:</p>
+					<test:hello world="World" />
+				</div>
+				
+				<h1>Content4:</h1>
+				<div id="content4">
+					<p>This is the content access from javascript:</p>
+					<test:hello world="javascript:myData.world" />
+				</div>
+				
+				<test:section title="Content5:">
+					<p>This is simple static content.</p>
+				</test:section>
+		
+				<test:section title="Content6:">
+					<p>This is recursively rendered content:</p>
+					<test:section title="Content6.1:">
+						<test:hello world="javascript:myData.world" />
+					</test:section>
+				</test:section>
+		
+				<test:section title="Content7:">
+					<p> This is recursively rendered content that has been disabled:</p>
+					<test:section title="Content7.1" rendered="javascript:false">
+						<test:hello world="Branden" />
+					</test:section>
+				</test:section>
+				
 				<script type="text/javascript" src="http://trimpath.googlecode.com/files/trimpath-template-1.0.38.js"></script>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 				<script type="text/javascript" src="jquery.trimlib.js"></script>
 				<script type="text/javascript">
+						var myData = { world: 'World' };
+					
 						(function($) {
 								$('#content1').trimlib({namespace: 'test', template: 'hello', data: {world: 'World'}}).hide().slideDown('slow');
+								$('#content2').trimlib('render', {namespace: 'test', template: 'hello', data: {world: 'World'}}).hide().slideDown('slow');
+								$('body').find('*').trimlib('expand');
 						})(jQuery);
 				</script>
 		</body>

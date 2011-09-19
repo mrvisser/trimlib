@@ -19,12 +19,57 @@
 	
 	//maintain a cache of tag libraries, these are initialized on first call
 	var trimlibs = false;
-		
-	$.fn.trimlib = function(options) {
-		init();
-		render(this, options.namespace, options.template, options.data);
-		return this;
+	
+	var methods = {
+		render: _render,
+		expand: _expand
 	};
+	
+	$.fn.trimlib = function(method) {
+		init();
+		
+		if (methods[method]) {
+			return methods[method].apply(this, Array.prototype.slice.call(arguments, 1))
+		} else if (typeof method === 'object') {
+			return methods['render'].apply(this, arguments);
+		} else {
+			throw new Error('Invalid arguments supplied to jQuery.trimlib');
+		}
+	};
+
+	/**
+	 * Simply wraps the {@code render} method, performing input validation and ensuring the jQuery
+	 * return type.
+	 * 
+	 * @param options The executiong options provided by the caller
+	 */ 
+	function _render(options) {
+		var namespace = options.namespace;
+		var template = options.template;
+		var data = options.data;
+		
+		if (!namespace || !template)
+			throw new Error('Must supply "namespace" and "template" options when rendering a template.');
+		
+		if (!data)
+			data = {};
+		
+		this.each(function() {
+			render(this, namespace, template, data);
+		});
+		
+		return this;
+	}
+	
+	/**
+	 * Simply wraps the {@code expand} method, ensuring the jQuery return type.
+	 */
+	function _expand(options) {
+		this.each(function() {
+			expand(this);
+		});
+		return this;
+	}
 
 	/**
 	 * Instantiate all the trimlib libraries that have been declared.
@@ -41,7 +86,11 @@
 		
 	/**
 	 * Render the template described by the {@code namespace}, {@code template} and {@data} and place
-	 * it inside the given {@code el}ement.
+	 * it inside the given {@code el}ement. This method must silently fail under the following
+	 * conditions:
+	 * 
+	 * a) The namespace provided does not exist
+	 * b) The template provided does not exist
 	 * 
 	 * @param el {Node} The element in which the rendered template should be inserted.
 	 * @param namespace {String} The namespace of the template.
@@ -57,6 +106,65 @@
 				$(el).html(content);
 			}
 		}
+	}
+	
+	/**
+	 * Replace the given DOM element with the rendered template. The information to render should be
+	 * found ont he DOM element itself, in the following format:
+	 * 
+	 *	<namespace:template attr1="val1" attr2="val2">...</namespace:template>
+	 *	
+	 * Where the data that is generated for the template would be {attr1: "val1", attr2: "val2"}.
+	 * 
+	 * @param el {Node} The element on the DOM to expand.
+	 * @return {jQuery} The <b>expanded</b> element.
+	 */
+	function expand(el) {
+		var data = buildTemplateData(el);
+		var split = el.nodeName.toLowerCase().split(':');
+		
+		//this means it wasn't a namespaced tag. assume that it means it shouldn't be handled by trimlib
+		if (!split[0] || !split[1])
+			return;
+		
+		/*
+		 * This __body data attribute is a special attribute that allows a template to recursively
+		 * render the body of a tag. As JST uses the 'toString' method to resolve a data object, it is
+		 * possible to load the content on-demand by overriding the method on the attribute as done
+		 * below. This method recursively executes the 'expand' method on the inner content when the
+		 * document body is requested. The benefit of loading this on demand is that, since the body
+		 * may not ALWAYS be rendered when a template is processed, the inner content will not be
+		 * processed unnecessarily.
+		 */
+		data.__body = {
+			'toString': function() {
+				$(el).find('*').trimlib('expand');
+				return $(el).html();
+			}
+		};
+		
+		var content = $('<div />').trimlib({namespace: split[0], template: split[1], data: data}).html();
+		$(el).replaceWith(content);
+	}
+	
+	/**
+	 * Generate the 'data' of the TrimPath template given the custom tag, using its attribute values.
+	 * If an attribute value begins with "javascript:", then everything afterward is {@code eval}'d.
+	 * Thus the returned object can be used to pass in complex objects to the template.
+	 * 
+	 * @param el {Node} The DOM Node whose attributes to process into template data.
+	 */
+	function buildTemplateData(el) {
+		var data = {};
+		//attributes on the tag directly translate to the data for the template
+		$.each(el.attributes, function(i, attr) {
+			if (attr.value.substring(0, 11) === 'javascript:') {
+				data[attr.name] = eval(attr.value.substring(11, attr.value.length));
+			} else {
+				data[attr.name] = attr.value;
+			}
+		});
+		return data;
 	}
 		
 	/**
@@ -80,7 +188,7 @@
 				if (!templates[name]) {
 					templates[name] = parseTemplate(name);
 				}
-					
+				
 				return templates[name];
 			}
 		};
@@ -110,7 +218,7 @@
 		 * Parse the template with the given {@code id}. This template must exist within the
 		 * trimlib library.
 		 * 
-		 * @param name {string} The ID of the trimpath template inside the trimlib library.
+		 * @param id {string} The ID of the trimpath template inside the trimlib library.
 		 * 
 		 */
 		function parseTemplate(id) {
@@ -118,10 +226,8 @@
 				var template = $(content).find('textarea[id='+id+']').val();
 				return TrimPath.parseTemplate(template);
 			} catch (err) {
-				console.log('Error parsing template "'+id+'": '+err);
+				throw new Error('Error parsing template "'+id+'": '+err);
 			}
 		}
 	}
-		
-		
 })(jQuery);

@@ -6,7 +6,7 @@ trimlib is a simple jQuery plugin wrapper for TrimPath JST that provides a coupl
 Examples
 =========
 
-1. Rendering a TrimPath JST
+Rendering a TrimPath JST
 -------------------------------------------------
 
 Consider the following HTML template:

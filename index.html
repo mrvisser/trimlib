@@ -2,7 +2,6 @@
 		<head>
 				<title>trimlib</title>
 				<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
-				
 		</head>
 		<body>
 				
@@ -41,16 +40,21 @@
 						<test:hello world="Branden" />
 					</test:section>
 				</test:section>
+
+				<div id="content8"></div>
 				
-				<script type="text/javascript" src="http://trimpath.googlecode.com/files/trimpath-template-1.0.38.js"></script>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+				<test:taskList title="My Task List" items="javascript:myTaskItems" />
+				
+				<script type="text/javascript" src="deps/trimpath-template-latest.js"></script>
+				<script type="text/javascript" src="deps/jquery-1.4.2.min.js"></script>
 				<script type="text/javascript" src="jquery.trimlib.js"></script>
 				<script type="text/javascript">
 						var myData = { world: 'World' };
-					
+						var myTaskItems = ['Eat', 'Code', 'Sleep'];
 						(function($) {
 								$('#content1').trimlib({namespace: 'test', template: 'hello', data: {world: 'World'}}).hide().slideDown('slow');
 								$('#content2').trimlib('render', {namespace: 'test', template: 'hello', data: {world: 'World'}}).hide().slideDown('slow');
+								$('#content8').trimlib('render', {namespace: 'test', template: 'section', data: {title: 'Content8:'}});
 								$('body').find('*').trimlib('expand');
 						})(jQuery);
 				</script>

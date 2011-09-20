@@ -15,3 +15,14 @@
 		</div>
 	{/if}
 </textarea>
+
+<textarea id="taskList">
+	<div class="task-list">
+		<h1>${title}</h1>
+		<ul>
+			{for item in items}
+				<li>${item}</li>
+			{/for}
+		</ul>
+	</div>
+</textarea>

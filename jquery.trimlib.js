@@ -54,6 +54,9 @@
 		if (!data)
 			data = {};
 		
+		if (data.__body === undefined)
+			data.__body = '';
+	 
 		this.each(function() {
 			render(this, namespace, template, data);
 		});
@@ -78,8 +81,8 @@
 		if (trimlibs === false) {
 			trimlibs = {};
 			$('link[rel=trimlib]').each(function() {
-				var namespace = $(this).attr('namespace');
-				trimlibs[namespace] = new Trimlib(this);
+				var trimlib = new Trimlib(this);
+				trimlibs[trimlib.namespace] = trimlib;
 			});
 		}
 	}
@@ -98,7 +101,7 @@
 	 * @param data {Object} The data that will feed the template.
 	 */
 	function render(el, namespace, template, data) {
-		var tld = trimlibs[namespace];
+		var tld = trimlibs[namespace.toLowerCase()];
 		if (tld) {
 			var templateProcessor = tld.templateObject(template);
 			if (templateProcessor) {
@@ -120,12 +123,18 @@
 	 * @return {jQuery} The <b>expanded</b> element.
 	 */
 	function expand(el) {
-		var data = buildTemplateData(el);
+		if (!el.parentNode)
+			return;
+		
 		var split = el.nodeName.toLowerCase().split(':');
 		
 		//this means it wasn't a namespaced tag. assume that it means it shouldn't be handled by trimlib
 		if (!split[0] || !split[1])
 			return;
+		if (!trimlibs[split[0]] || !trimlibs[split[0]].hasTemplate(split[1]))
+			return;
+		
+		var data = buildTemplateData(el);
 		
 		/*
 		 * This __body data attribute is a special attribute that allows a template to recursively
@@ -178,10 +187,15 @@
 				
 		//the trimpath templates are compiled lazily
 		var templates = {};
-				
+		
 		return {
-			namespace: $(link).attr('namespace'),
+			namespace: $(link).attr('namespace').toLowerCase(),
+			hasTemplate: function(name) {
+				return $(content).find('> textarea[id='+name.toLowerCase()+']').length > 0;
+			},
 			templateObject: function(name) {
+				name = name.toLowerCase();
+				
 				if (content === false)
 					content = loadTrimlibContent(link);
 					
@@ -207,11 +221,16 @@
 				url: href,
 				async: false,
 				success: function(value) {
-					content = value;
+					content = $('<div />').html(value);
 				}
 			});
-						
-			return $('<div></div>').html(content).get(0);
+			
+			//ignore case
+			content.find('> textarea').each(function() {
+				$(this).attr('id', $(this).attr('id').toLowerCase());
+			})
+			
+			return content.get(0);
 		}
 		
 		/**
@@ -222,8 +241,9 @@
 		 * 
 		 */
 		function parseTemplate(id) {
+			id = id.toLowerCase();
 			try {
-				var template = $(content).find('textarea[id='+id+']').val();
+				var template = $(content).find('> textarea[id='+id+']').val();
 				return TrimPath.parseTemplate(template);
 			} catch (err) {
 				throw new Error('Error parsing template "'+id+'": '+err);

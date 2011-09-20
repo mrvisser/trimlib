@@ -7,7 +7,7 @@ Examples
 =========
 
 Rendering a TrimPath JST
--------------------------------------------------
+-------------------------
 
 Consider the following HTML template:
 
@@ -62,8 +62,8 @@ Now the file `tld.html` would be located on your domain, and its contents might 
 </textarea>
 ```
 
-2. Custom Tags
----------------------------------------------
+Custom Tags
+------------
 
 Rather than explicitly invoking the TrimPath template, you can reference the namespace, template ID
 and specify its data in a "custom tag" on the DOM. Then, you can "expand" that tag using a TrimLib
@@ -109,8 +109,8 @@ template. The `tld.html` file might have a template that looks like this:
 Simple attribute values as seen above are always passed into the TrimPath JST as strings. Using a
 prefix of `javascript:` for the value, you can specify a more complex value, which is shown next.
 
-3. Using the `javascript:` attribute value prefix
---------------------------------------------------
+Using the `javascript:` attribute value prefix
+-----------------------------------------------
 
 TrimLib supports `eval`uating JavaScript to derive an attribute value similar to how JavaScript can
 be evaluated in an `href` tag:
@@ -153,8 +153,8 @@ list template, we can iterate through the elements like so:
 </textarea>
 ```
 
-4. Using the special `__body` JST variable
--------------------------------------------
+Using the special `__body` JST variable
+----------------------------------------
 
 Using these custom tags would be pretty lame if you couldn't render the body of the custom tags.
 That's why the `__body` variable exists. In your JST, if you access the `__body` variable, the body

@@ -36,9 +36,11 @@
 		
 				<test:section title="Content7:">
 					<p> This is recursively rendered content that has been disabled:</p>
-					<test:section title="Content7.1" rendered="javascript:false">
-						<test:hello world="Branden" />
-					</test:section>
+					<div>
+						<test:section title="Content7.1" rendered="javascript:false">
+							<test:hello world="Branden" test="javascript:alert('oops!')"/>
+						</test:section>
+					</div>
 				</test:section>
 
 				<div id="content8"></div>

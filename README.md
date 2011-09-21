@@ -85,9 +85,7 @@ Consider the following HTML file:
 		<script type="text/javascript" src="scripts/jquery.min.js"></script>
 		<script type="text/javascript" src="jquery.trimlib.js"></script>
 		<script type="text/javascript">
-			(function($) {
-				$('body').find('*').trimlib('expand');
-			})(jQuery);
+			jQuery('body').find('*').trimlib('expand');
 		</script>
 	</body>
 </html>

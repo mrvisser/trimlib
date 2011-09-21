@@ -119,13 +119,15 @@
 	 *	
 	 * Where the data that is generated for the template would be {attr1: "val1", attr2: "val2"}.
 	 * 
-	 * @param el {Node} The element on the DOM to expand.
-	 * @return {jQuery} The <b>expanded</b> element.
+	 * If the node is not attached to the DOM, it will not be expanded.
+	 * 
+	 * @param el {Node} The node to expand
 	 */
 	function expand(el) {
-		if (!el.parentNode)
+		//expanding a detached element is unnecessary and can cause problems. skip them!
+		if (detached(el))
 			return;
-		
+
 		var split = el.nodeName.toLowerCase().split(':');
 		
 		//this means it wasn't a namespaced tag. assume that it means it shouldn't be handled by trimlib
@@ -135,7 +137,7 @@
 			return;
 		
 		var data = buildTemplateData(el);
-		
+
 		/*
 		 * This __body data attribute is a special attribute that allows a template to recursively
 		 * render the body of a tag. As JST uses the 'toString' method to resolve a data object, it is
@@ -154,6 +156,13 @@
 		
 		var content = $('<div />').trimlib({namespace: split[0], template: split[1], data: data}).html();
 		$(el).replaceWith(content);
+	}
+	
+	/**
+	 * Determine if this node is part of a DOM tree that is detached from the HTML document.
+	 */
+	function detached(el) {
+		return !$(el).closest('html').length;
 	}
 	
 	/**

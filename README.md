@@ -280,4 +280,4 @@ Quirks to note
 
 1. Not currently tested in Internet Explorer!
 2. The file with the templates (e.g., tld.html) should not nest the textarea's. They **must** be at the root of the document.
-3. Since the textarea ID's must be able to map to tag names, they are **case insensitive**. When loaded, all the ID's of the textarea's in your template library will be converted to lower-case.
+3. Since the namespaces and textarea ID's must be able to map to tag names, they are **case insensitive**. When loaded, all the namespace names and ID's of the textarea's in your template library will be converted to lower-case.

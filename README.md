@@ -269,5 +269,9 @@ inner body of the custom tag.
 Suppose, for example, the `<test:section...>` tag is invoked with the attribute `rendered="javascript:false"`,
 the body tag will never be expanded.
 
-And that's all I have for now. If you have any questions or feedback, feel free to drop me a message!
+For a more realistic demonstration of how TrimLib can be used, I developed it while writing a static
+social-networking mashup at [MrVisser.ca](http://www.mrvisser.ca), which will have more sophisticated
+use.
+
+If you have any questions or feedback, feel free to drop me a message!
 

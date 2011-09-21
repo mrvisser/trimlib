@@ -174,7 +174,6 @@
 	 */
 	function buildTemplateData(el) {
 		var data = {};
-		//attributes on the tag directly translate to the data for the template
 		$.each(el.attributes, function(i, attr) {
 			if (attr.value.substring(0, 11) === 'javascript:') {
 				data[attr.name] = eval(attr.value.substring(11, attr.value.length));
@@ -200,6 +199,9 @@
 		return {
 			namespace: $(link).attr('namespace').toLowerCase(),
 			hasTemplate: function(name) {
+				if (content === false)
+					content = loadTrimlibContent(link);
+				
 				return $(content).find('> textarea[id='+name.toLowerCase()+']').length > 0;
 			},
 			templateObject: function(name) {

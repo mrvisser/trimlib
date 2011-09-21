@@ -9,29 +9,41 @@ Examples
 Rendering a TrimPath JST
 -------------------------
 
-Consider the following HTML template:
-
+**/index.html**
 ```html
-<html>
-	<head>
-		<title>trimlib</title>
-		<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
-	</head>
-	<body>
-		<h1>Content1:</h1>
-		<div id="content1"></div>
+...
+<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
+...
+<div id="hello"></div>
 
-		<script type="text/javascript" src="scripts/trimpath-template-1.0.38.js"></script>
-		<script type="text/javascript" src="scripts/jquery.min.js"></script>
-		<script type="text/javascript" src="jquery.trimlib.js"></script>
-		<script type="text/javascript">
-			jQuery('#content1').trimlib({namespace: 'test', template: 'hello', data: {world: 'World'}});
-		</script>
-	</body>
-</html>
+<script type="text/javascript" src="scripts/trimpath-template-1.0.38.js"></script>
+<script type="text/javascript" src="scripts/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.trimlib.js"></script>
+<script type="text/javascript">
+	jQuery('#hello').trimlib({namespace: 'test', template: 'hello', data: {world: 'World'}});
+</script>
+...
 ```
 
-The 2 (two) key things happening in this example are:
+**/tld.html**
+```html
+<textarea id="hello">
+	<p>
+		Hello, ${world}!
+	</p>
+</textarea>
+```
+
+**Result:**
+```html
+...
+<p>
+	Hello, World!
+</p>
+...
+```
+
+The two key things happening in this example are:
 
 `<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />`: The `rel="trimlib"`
 attribute tells trimlib that it is linking to a set of trimlib templates (i.e., a "library"); the 
@@ -43,25 +55,6 @@ tld.html must be on the same domain as the html document).
 tells trimlib to render the template `hello` in the library with namespace `test` with data
 `{world: 'World'}`, and insert it into the element with id `content1`. Pretty straight-forward.
 
-Now the file `tld.html` would be located on your domain, and its contents might be this:
-
-```html
-<textarea id="hello">
-	<p>
-		Hello, ${world}!
-	</p>
-</textarea>
-
-<textarea id="another-template">
-	<p>
-		This is another template, rendered as a 
-		<a href="http://code.google.com/p/trimpath/wiki/JavaScriptTemplates" target="_blank">
-			Trimpath JST template
-		</a>!
-	</p>
-</textarea>
-```
-
 Custom Tags
 ------------
 
@@ -69,26 +62,30 @@ Rather than explicitly invoking the TrimPath template, you can reference the nam
 and specify its data in a "custom tag" on the DOM. Then, you can "expand" that tag using a TrimLib
 call.
 
-Consider the following HTML file:
-
+**/index.html**
 ```html
-<html>
-	<head>
-			<title>trimlib</title>
-			<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
-	</head>
-	<body>
+...
+<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
+...
+<test:large-title title="Introduction to TrimLib" />
+...
+<script type="text/javascript">
+	jQuery('body').find('*').trimlib('expand');
+</script>
+```
 
-		<test:large-title title="Introduction to TrimLib" />
+**/tld.html**
+```html
+<textarea id="large-title">
+	<h1>${title}</h1>
+</textarea>
+```
 
-		<script type="text/javascript" src="scripts/trimpath-template-1.0.38.js"></script>
-		<script type="text/javascript" src="scripts/jquery.min.js"></script>
-		<script type="text/javascript" src="jquery.trimlib.js"></script>
-		<script type="text/javascript">
-			jQuery('body').find('*').trimlib('expand');
-		</script>
-	</body>
-</html>
+**Result:
+```html
+...
+<h1>Introduction to TrimLib</h1>
+...
 ```
 
 In this example, the custom tag would be equivalent to running $.trimlib with the following options:
@@ -97,12 +94,6 @@ In this example, the custom tag would be equivalent to running $.trimlib with th
 
 In this case, that custom tag will be completely replaced with the result of rendering that
 template. The `tld.html` file might have a template that looks like this:
-
-```html
-<textarea id="large-title">
-	<h1>${title}</h1>
-</textarea>
-```
 
 Simple attribute values as seen above are always passed into the TrimPath JST as strings. Using a
 prefix of `javascript:` for the value, you can specify a more complex value, which is shown next.
@@ -159,38 +150,29 @@ That's why the `__body` variable exists. In your JST, if you access the `__body`
 of the custom tag will be recursively rendered and inserted into the location of the variable in the
 template. For example:
 
+**/index.html**
 ```html
-<html>
-	<head>
-			<title>trimlib</title>
-			<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
-	</head>
-	<body>
-
-		<test:section title="My Things">
-			<p>These are some things that have to do with me.</p>
-			<test:task-list title="Tasks" items="javascript:myTaskItems" />
-			<test:pictures pictures="javascript:myPictures" />
-		</test:section>
-
-		<script type="text/javascript" src="scripts/trimpath-template-1.0.38.js"></script>
-		<script type="text/javascript" src="scripts/jquery.min.js"></script>
-		<script type="text/javascript" src="jquery.trimlib.js"></script>
-		<script type="text/javascript">
-			var myTaskItems = ['Eat', 'Code', 'Sleep'];
-			var myPictures = [
-				{ src: 'MyFace.jpg', alt: 'This is my face.' },
-				{ src: 'MyArm.jpg', alt: 'Now this is a picture of my arm.' }
-			];
-				
-			jQuery('body').find('*').trimlib('expand');
-		</script>
-	</body>
-</html>
+...
+<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
+...
+<test:section title="My Things">
+	<p>These are some things that have to do with me.</p>
+	<test:task-list title="Tasks" items="javascript:myTaskItems" />
+	<test:pictures pictures="javascript:myPictures" />
+</test:section>
+...
+<script type="text/javascript">
+	var myTaskItems = ['Eat', 'Code', 'Sleep', 'Be more creative with examples'];
+	var myPictures = [
+		{ src: 'MyFace.jpg', alt: 'This is my face.' },
+		{ src: 'MyArm.jpg', alt: 'Now this is a picture of my arm.' }
+	];
+		
+	jQuery('body').find('*').trimlib('expand');
+</script>
 ```
 
-And consider this `tld.html`:
-
+**/tld.html**
 ```html
 <textarea id="section">
 	{if !defined('rendered')}
@@ -227,11 +209,37 @@ And consider this `tld.html`:
 </textarea>
 ```
 
-As you can see, the `section` template makes use of the `${__body}` variable and places it within
-those `<div></div>` tags, which is where the body of the tag will be recursively rendered.
+**Result:**
+```html
+...
+<h1>My Things</h1>
+<div>
+	<p>These are some things that have to do with me.</p>
+	<div class="task-list">
+		<h2>Tasks</h2>
+		<ul>
+			<li>Eat</li>
+			<li>Code</li>
+			<li>Sleep</li>
+			<li>Be more creative with examples</li>
+		</ul>
+	</div>
+	<div class="pictures">
+		<h2>My Pictures</h2>
+		<div class="picture">
+			<img src="MyFace.jpg" alt="This is my face." />
+			<img src="MyArm.jpg" alt="Now this is a picture of my arm." />
+		</div>
+	</div>
+</div>
+...
+```
 
-Now if the `<test:section...>` tag is invoked with the attribute `rendered="javascript:false"`, the
-body tag will never be rendered.
+As you can see, when the template comes across the ${__body} variable, it recursively expands the
+inner body of the custom tag.
+
+Suppose, for example, the `<test:section...>` tag is invoked with the attribute `rendered="javascript:false"`,
+the body tag will never be expanded.
 
 And that's all I have for now. If you have questions or feedback, feel free to drop me a message!
 

@@ -16,7 +16,7 @@ Rendering a TrimPath JST
 <link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
 ...
 <div id="hello"></div>
-
+...
 <script type="text/javascript" src="scripts/trimpath-template-1.0.38.js"></script>
 <script type="text/javascript" src="scripts/jquery.min.js"></script>
 <script type="text/javascript" src="jquery.trimlib.js"></script>
@@ -40,9 +40,11 @@ Rendering a TrimPath JST
 
 ```html
 ...
-<p>
-	Hello, World!
-</p>
+<div id="hello">
+	<p>
+		Hello, World!
+	</p>
+</div>
 ...
 ```
 
@@ -55,8 +57,9 @@ The `rel="trimlib"` attribute tells trimlib that it is linking to a set of triml
 a website that contains the actual Trimpath JST templates (note that for XSS security, the path to
 tld.html must be on the same domain as the html document).
 
-`jQuery('#content1').trimlib({namespace: 'test', template: 'hello', data: {world: 'World'}});`: This
-tells trimlib to render the template `hello` in the library with namespace `test` with data
+`jQuery('#content1').trimlib({namespace: 'test', template: 'hello', data: {world: 'World'}});`
+
+This tells trimlib to render the template `hello` in the library with namespace `test` with data
 `{world: 'World'}`, and insert it into the element with id `content1`. Pretty straight-forward.
 
 Custom Tags
@@ -77,6 +80,7 @@ call.
 <script type="text/javascript">
 	jQuery('body').find('*').trimlib('expand');
 </script>
+...
 ```
 
 **/tld.html**
@@ -111,31 +115,22 @@ Using the `javascript:` attribute value prefix
 TrimLib supports `eval`uating JavaScript to derive an attribute value similar to how JavaScript can
 be evaluated in an `href` tag:
 
+**/index.html**
+
 ```html
-<html>
-	<head>
-			<title>trimlib</title>
-			<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
-	</head>
-	<body>
-
-		<test:task-list title="My Task List" items="javascript:myTaskItems" />
-
-		<script type="text/javascript" src="scripts/trimpath-template-1.0.38.js"></script>
-		<script type="text/javascript" src="scripts/jquery.min.js"></script>
-		<script type="text/javascript" src="jquery.trimlib.js"></script>
-		<script type="text/javascript">
-			var myTaskItems = ['Eat', 'Code', 'Sleep'];
-			jQuery('body').find('*').trimlib('expand');
-		</script>
-	</body>
-</html>
+...
+<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
+...
+<test:task-list title="My Task List" items="javascript:myTaskItems" />
+...
+<script type="text/javascript">
+	var myTaskItems = ['Eat', 'Code', 'Sleep'];
+	jQuery('body').find('*').trimlib('expand');
+</script>
+...
 ```
 
-As you can see, the attribute `items` will evaluate to the variable `myTaskItems` in the global
-scope, passing in the array `['Eat', 'Code', 'Sleep']` as the variable `items`. Then in our task
-list template, we can iterate through the elements like so:
-
+**/tld.html**
 ```html
 <textarea id="task-list">
 	<div class="task-list">
@@ -148,6 +143,26 @@ list template, we can iterate through the elements like so:
 	</div>
 </textarea>
 ```
+
+**Result:**
+
+```html
+...
+<div class="task-list">
+	<h1>My Task List</h1>
+	<div class="task-list">
+		<ul>
+			<li>Eat</li>
+			<li>Code</li>
+			<li>Sleep</li>
+		</ul>
+	</div>
+</div>
+...
+```
+
+As you can see, the attribute `items` will evaluate to the variable `myTaskItems` in the global
+scope, passing in the array `['Eat', 'Code', 'Sleep']` as the variable `items`.
 
 Using the special `__body` JST variable
 ----------------------------------------
@@ -251,5 +266,5 @@ inner body of the custom tag.
 Suppose, for example, the `<test:section...>` tag is invoked with the attribute `rendered="javascript:false"`,
 the body tag will never be expanded.
 
-And that's all I have for now. If you have questions or feedback, feel free to drop me a message!
+And that's all I have for now. If you have any questions or feedback, feel free to drop me a message!
 

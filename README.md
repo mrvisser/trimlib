@@ -3,6 +3,9 @@ trimlib is a simple jQuery plugin wrapper for TrimPath JST that provides a coupl
 1. The ability to externalize your JST template files
 2. The ability to invoke those JST template files VIA a custom tag definition on the DOM
 
+Note that this documentation assumes you are familiar with the
+[TrimPath JavaScript Templates API](http://code.google.com/p/trimpath/wiki/JavaScriptTemplates).
+
 Examples
 =========
 

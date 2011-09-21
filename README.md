@@ -10,6 +10,7 @@ Rendering a TrimPath JST
 -------------------------
 
 **/index.html**
+
 ```html
 ...
 <link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
@@ -26,6 +27,7 @@ Rendering a TrimPath JST
 ```
 
 **/tld.html**
+
 ```html
 <textarea id="hello">
 	<p>
@@ -35,6 +37,7 @@ Rendering a TrimPath JST
 ```
 
 **Result:**
+
 ```html
 ...
 <p>
@@ -45,8 +48,9 @@ Rendering a TrimPath JST
 
 The two key things happening in this example are:
 
-`<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />`: The `rel="trimlib"`
-attribute tells trimlib that it is linking to a set of trimlib templates (i.e., a "library"); the 
+`<link rel="trimlib" type="text/html" namespace="test" href="tld.html" />`
+
+The `rel="trimlib"` attribute tells trimlib that it is linking to a set of trimlib templates (i.e., a "library"); the 
 `namespace="test"` is specifying the *namespace* of the library; and `href="tld.html"` is specifying
 a website that contains the actual Trimpath JST templates (note that for XSS security, the path to
 tld.html must be on the same domain as the html document).
@@ -63,6 +67,7 @@ and specify its data in a "custom tag" on the DOM. Then, you can "expand" that t
 call.
 
 **/index.html**
+
 ```html
 ...
 <link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
@@ -75,13 +80,15 @@ call.
 ```
 
 **/tld.html**
+
 ```html
 <textarea id="large-title">
 	<h1>${title}</h1>
 </textarea>
 ```
 
-**Result:
+**Result:**
+
 ```html
 ...
 <h1>Introduction to TrimLib</h1>
@@ -151,6 +158,7 @@ of the custom tag will be recursively rendered and inserted into the location of
 template. For example:
 
 **/index.html**
+
 ```html
 ...
 <link rel="trimlib" type="text/html" namespace="test" href="tld.html" />
@@ -173,6 +181,7 @@ template. For example:
 ```
 
 **/tld.html**
+
 ```html
 <textarea id="section">
 	{if !defined('rendered')}
@@ -210,6 +219,7 @@ template. For example:
 ```
 
 **Result:**
+
 ```html
 ...
 <h1>My Things</h1>

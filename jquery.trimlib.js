@@ -167,8 +167,9 @@
 	
 	/**
 	 * Generate the 'data' of the TrimPath template given the custom tag, using its attribute values.
-	 * If an attribute value begins with "javascript:", then everything afterward is {@code eval}'d.
-	 * Thus the returned object can be used to pass in complex objects to the template.
+	 * If an attribute value begins with "javascript:", then everything afterward is executed as a
+	 * javascript function in the global context. Thus the returned object can be used to pass in
+	 * complex objects to the template.
 	 * 
 	 * @param el {Node} The DOM Node whose attributes to process into template data.
 	 */

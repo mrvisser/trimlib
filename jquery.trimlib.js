@@ -176,7 +176,8 @@
 		var data = {};
 		$.each(el.attributes, function(i, attr) {
 			if (attr.value.substring(0, 11) === 'javascript:') {
-				data[attr.name] = eval(attr.value.substring(11, attr.value.length));
+				var script = attr.value.substring(11, attr.value.length);
+				data[attr.name] = new Function(script)();
 			} else {
 				data[attr.name] = attr.value;
 			}

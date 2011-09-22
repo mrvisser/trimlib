@@ -20,7 +20,7 @@
 				<h1>Content4:</h1>
 				<div id="content4">
 					<p>This is the content access from javascript:</p>
-					<test:hello world="javascript:myData.world" />
+					<test:hello world="javascript:return myData.world" />
 				</div>
 				
 				<test:section title="Content5:">
@@ -30,25 +30,25 @@
 				<test:section title="Content6:">
 					<p>This is recursively rendered content:</p>
 					<test:section title="Content6.1:">
-						<test:hello world="javascript:myData.world" />
+						<test:hello world="javascript:return myData.world" />
 					</test:section>
 				</test:section>
 		
 				<test:section title="Content7:">
 					<p> This is recursively rendered content that has been disabled:</p>
 					<div>
-						<test:section title="Content7.1" rendered="javascript:false">
-							<test:hello world="Branden" test="javascript:alert('oops!')"/>
+						<test:section title="Content7.1" rendered="javascript:return false">
+							<test:hello world="Branden" test="javascript:alert('oops!'); return false"/>
 						</test:section>
 					</div>
 				</test:section>
 
 				<div id="content8"></div>
 				
-				<test:taskList title="My Task List" items="javascript:myTaskItems" />
+				<test:taskList title="My Task List" items="javascript:return myTaskItems" />
 				
-				<script type="text/javascript" src="deps/trimpath-template-latest.js"></script>
-				<script type="text/javascript" src="deps/jquery-1.4.2.min.js"></script>
+				<script type="text/javascript" src="deps/trimpath-template-1.0.38.js"></script>
+				<script type="text/javascript" src="deps/jquery-1.6.4.min.js"></script>
 				<script type="text/javascript" src="jquery.trimlib.js"></script>
 				<script type="text/javascript">
 						var myData = { world: 'World' };
